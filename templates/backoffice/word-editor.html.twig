@@ -1,0 +1,114 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <div data-controller="word-editor-controller" id="selector">
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <ul>
+                        {% for text in dialogue.dialogueTexts %}
+                            <li dir="rtl" class="text-end" style="font-size:75px">
+                                {{ text.saidBy }} : {{ text.text }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="container mt-5">
+            <div class="row">
+                <div class="col-12">
+                    <button id="selector-button" data-target="word-editor-controller.button">Wrap selected text</button>
+
+                    <p id="selector" style="font-size: 200px;" dir="rtl" class="text-center"
+                       data-dialogue-value="{{ dialogue.dialogueTexts[0].text }}">
+                        {{ dialogue.dialogueTexts[0].text }}
+                    </p>
+                </div>
+                <div class="col-6">
+                    <form id="words" method="post" action="{{ path('app_backoffice_add_words') }}">
+                        <input type="submit" value="Submit">
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        const selectorButton = document.getElementById('selector-button');
+        const selector = document.getElementById('selector');
+        const wordArray = [];
+
+        var form = document.querySelector('form');
+
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function (event) {
+            // Prevent the form from being submitted
+            event.preventDefault();
+
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'words';
+            input.value = JSON.stringify(wordArray);
+
+            form.appendChild(input);
+
+            form.submit();
+        });
+
+        selectorButton.addEventListener('click', () => {
+            // Get the selected text
+            const selection = window.getSelection();
+
+            // Check if there is any selected text
+            if (selection.toString()) {
+                // Create a span element
+                const span = document.createElement('span');
+
+                // Give the span a random color as the background
+                span.style.backgroundColor = getRandomColor();
+
+                const selectedElement = selection.anchorNode.parentElement.closest('p');
+
+                let innerHTML = selectedElement.getAttribute('data-dialogue-value');
+
+                let startPos = innerHTML.indexOf(selection.toString());
+                const endPos = startPos + selection.toString().length;
+
+                if (startPos === -1) {
+                    startPos = 0
+                }
+
+                selection.getRangeAt(0).surroundContents(span);
+                wordArray.push({
+                    "value": selection.toString(),
+                    "start": startPos,
+                    "end": endPos
+                });
+                clearSelection();
+
+            }
+        });
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function clearSelection() {
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                document.selection.empty();
+            }
+        }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,74 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LessonController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-12">
+                <h2 class="fw-bold">{{ page.title }}</h2>
+                {% if page.video is not null %}
+                    {% include 'lesson/partials/page.video.html.twig' with { 'page' : page } %}
+                {% elseif page.question is not null %}
+                    {% set question = page.question %}
+                    {{ question.title }}
+                    <div class="row mt-3">
+                        <form method="post" class="row mt-3">
+                            {% for option in question.questionOptions %}
+                                {% if selected_answer[option.title] is defined %}
+                                    {% set answer_class = selected_answer[option.title] == true ?
+                                        ' quiz-answer-correct' : ' quiz-answer-wrong' %}
+                                {% else %}
+                                    {% set answer_class = '' %}
+                                {% endif %}
+                                <div class="col-6">
+                                    <div class="quiz-answers"
+                                         data-quiz-answer="{{ option.title }}">
+                                        <div class="card{{ answer_class }}">
+                                            <div class="card-body">
+                                                <h1 class="card-title text-center display-5">
+                                                    {{ option.title }}
+                                                </h1>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                            <div class="mt-5">
+                                <input type="hidden" name="previous_choices" value="{{ selected_answer|json_encode }}">
+                                <input type="hidden" name="selected_option" id="selected_option" value="وَ">
+                                <button type="submit">Controleren</button>
+                            </div>
+                        </form>
+                    </div>
+                {% else %}
+                    <p class="mt-3">
+                        {{ page.content|raw }}
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+        {% if nextPage is not null %}
+            <div class="row">
+                <div class="col-12">
+                    <a href="{{ path('app_page_index', { "page_slug": nextPage.slug, "lesson_slug": page.lesson.slug }) }}">
+                        Next page
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+    {% block extra_javascript %}
+        <script>
+            $(document).ready(function () {
+
+                $(".quiz-answers").click(function (event) {
+                    var selectedValue = event.currentTarget;
+                    var dataSelected = $(selectedValue).data('quiz-answer');
+                    $("#selected_option").val(dataSelected);
+                });
+            });
+        </script>
+    {% endblock %}

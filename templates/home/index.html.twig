@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+{#            <div class="col-6">#}
+
+{#                <button id="selector-button">Wrap selected text</button>#}
+
+{#                <p id="selector" style="font-size: 200px;" dir="rtl">#}
+{#                    بِخَيْرٍ ، وَ الحَمْدُ للَّه#}
+{#                </p>#}
+{#            </div>#}
+{#            <div class="col-6">#}
+{#                <form id="words" method="post">#}
+{#                    <input type="submit" value="Submit">#}
+{#                </form>#}
+{#            </div>#}
+            <div class="col">
+                <h1>Homepagina</h1>
+            </div>
+        </div>
+    </div>
+
+{#    <script>#}
+{#        const selectorButton = document.getElementById('selector-button');#}
+{#        const selector = document.getElementById('selector');#}
+{#        const wordArray = [];#}
+
+{#        var form = document.querySelector('form');#}
+
+{#        // Add a submit event listener to the form#}
+{#        form.addEventListener('submit', function(event) {#}
+{#            // Prevent the form from being submitted#}
+{#            event.preventDefault();#}
+
+{#            // Loop through the array#}
+{#            for (var i = 0; i < wordArray.length; i++) {#}
+{#                // Create a new hidden input field#}
+{#                var input = document.createElement('input');#}
+{#                input.type = 'hidden';#}
+{#                input.name = 'words[]';#}
+{#                input.value = wordArray[i];#}
+
+{#                // Add the input field to the form#}
+{#                form.appendChild(input);#}
+{#            }#}
+
+{#            form.submit();#}
+{#        });#}
+
+{#        selectorButton.addEventListener('click', () => {#}
+{#            // Get the selected text#}
+{#            const selection = window.getSelection();#}
+
+{#            // Check if there is any selected text#}
+{#            if (selection.rangeCount > 0) {#}
+{#                // Create a span element#}
+{#                const span = document.createElement('span');#}
+
+{#                // Give the span a random color as the background#}
+{#                span.style.backgroundColor = getRandomColor();#}
+
+{#                // Wrap the selected text in the span element#}
+{#                selection.getRangeAt(0).surroundContents(span);#}
+{#                wordArray.push(selection.toString());#}
+{#            }#}
+{#        });#}
+
+{#        function getRandomColor() {#}
+{#            const letters = '0123456789ABCDEF';#}
+{#            let color = '#';#}
+{#            for (let i = 0; i < 6; i++) {#}
+{#                color += letters[Math.floor(Math.random() * 16)];#}
+{#            }#}
+{#            return color;#}
+{#        }#}
+
+{#    </script>#}
+
+{% endblock %}

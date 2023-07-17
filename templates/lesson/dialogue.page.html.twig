@@ -1,0 +1,67 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LessonController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-5 col-12">
+                <h2 class="fw-bold">{{ page.title }}</h2>
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <ul class="list-group">
+                            <table>
+                                <tbody>
+                                {% for dialogue in page.dialogue.dialogueTexts %}
+                                    <tr>
+                                        <td class="text-arabic" dir="rtl">
+                                            {{ dialogue.text }}
+                                        </td>
+                                        <td class="text-arabic" dir="rtl">
+                                            :
+                                        </td>
+                                        <td class="text-arabic" dir="rtl">
+                                            {{ dialogue.saidBy }}
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+{#                            {% for dialogue in page.dialogue.dialogueTexts %}#}
+{#                                <li class="list-group-item border-0">#}
+{#                                    <p dir="rtl" class="my-0 text-end text-arabic">#}
+{#                                        {{ dialogue.saidBy }} : {{ dialogue.text }}#}
+
+{#                                    </p>#}
+{#                                </li>#}
+{#                            {% endfor %}#}
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        {% if nextPage is not null %}
+            <div class="row">
+                <div class="col-12">
+                    <a href="{{ path('app_page_index', { "page_slug": nextPage.slug, "lesson_slug": page.lesson.slug }) }}">
+                        Next page
+                    </a>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+
+    {% block extra_javascript %}
+        <script>
+            $(document).ready(function () {
+
+                $(".quiz-answers").click(function (event) {
+                    var selectedValue = event.currentTarget;
+                    var dataSelected = $(selectedValue).data('quiz-answer');
+                    $("#selected_option").val(dataSelected);
+                });
+            });
+        </script>
+    {% endblock %}

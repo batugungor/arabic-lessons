@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-lg-6 col-12">
+                <div class="list-group">
+                    {% for text in dialogue.dialogueTexts %}
+                        <a href="{{ path('app_backoffice_dialogue_words', {
+                            'dialogueId': dialogue.id,
+                            'dialogueTextId': text.id
+                        }) }}"
+                           class="list-group-item list-group-item-action">
+                            Dialoog {{ loop.index }}: {{ text.identifier }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello LessonController!{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class="row">
+            <div class="col-4">
+
+                <div class="list-group">
+                    {% for page in pages %}
+                        <a href="{{ path('app_page_index', { "page_slug": page.slug, "lesson_slug": lesson.slug }) }}"
+                           class="list-group-item list-group-item-action" aria-current="true">
+                            {{ page.title }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,8 @@
+{% for word in verse.words|slice(0,-1) %}
+    <div class="--arabic-word" style="display: none"
+         data-selected-word-arabic-value="{{ word.code_v1 }}"
+         data-selected-word-transliteration-value="{{ word.transliteration.text }}"
+         data-selected-word-font-value="page-{{ word.page_number }}"
+    >
+    </div>
+{% endfor %}

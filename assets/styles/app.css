@@ -1,0 +1,93 @@
+@import '~bootstrap';
+@import 'fonts.css';
+
+@font-face {
+    font-family: SpaceGroteskBold;
+    src: url('../fonts/SpaceGrotesk-Bold.ttf');
+}
+
+@font-face {
+    font-family: SpaceGroteskLight;
+    src: url('../fonts/SpaceGrotesk-Light.ttf');
+}
+
+@font-face {
+    font-family: SpaceGroteskMedium;
+    src: url('../fonts/SpaceGrotesk-Medium.ttf');
+}
+
+@font-face {
+    font-family: SpaceGroteskRegular;
+    src: url('../fonts/SpaceGrotesk-Regular.ttf');
+}
+
+@font-face {
+    font-family: SpaceGroteskSemiBold;
+    src: url('../fonts/SpaceGrotesk-SemiBold.ttf');
+}
+
+:root {
+    --primary-color: #252525;
+    --secondary-color: #A4F83A;
+    --black-color: #252525;
+    --grey-color: #5A5A5A;
+    --white-color: #ffff;
+
+    --font-light: SpaceGroteskLight;
+    --font-medium: SpaceGroteskMedium;
+    --font-regular: SpaceGroteskRegular;
+    --font-semiBold: SpaceGroteskSemiBold;
+    --font-bold: SpaceGroteskBold;
+}
+
+.--text-black {
+    color: var(--black-color);
+}
+
+.--text-grey {
+    color: var(--grey-color);
+}
+
+.--text-white {
+    color: var(--white-color);
+}
+
+.--sunnah-categories-heading {
+    font-family: var(--font-bold);
+}
+
+.--sunnah-categories-list li{
+    font-family: var(--font-regular);
+}
+
+.--heading-title {
+    font-family: var(--font-bold);
+}
+
+.--content {
+    font-family: var(--font-regular);
+}
+
+.quiz-answers {
+    cursor: pointer;
+}
+
+.quiz-answer-correct {
+    border: 1px solid green;
+}
+
+.quiz-answer-wrong {
+    border: 1px solid red;
+}
+
+.text-arabic {
+    font-size: 30px;
+}
+
+.text-arabic-one {
+    color: #56628b;
+}
+
+.text-arabic-two {
+    color: #e0972a;
+}

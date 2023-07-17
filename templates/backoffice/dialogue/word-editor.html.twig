@@ -1,0 +1,217 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <div class="card mb-2">
+                    <div class="card-body">
+                        <p id="selector" dir="rtl" class="display-1"
+                           data-dialogue-value="{{ dialogueWord.text }}">
+                            {{ dialogueWord.text }}
+                        </p>
+                        <hr/>
+                        <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-start gap-3">
+                                <form id="words" method="post" action="{{ path('app_backoffice_add_words', {
+                                    'dialogueId': dialogue.id,
+                                    'dialogueTextId': dialogueWord.id
+                                }) }}">
+                                    <input type="submit" value="Submit" class="btn btn-primary">
+                                </form>
+                                <button id="selector-button" class="btn btn-dark">Wrap selected text</button>
+                            </div>
+
+                            <a href="{{ path('app_backoffice_remove_words', {
+                                'dialogueId': dialogue.id,
+                                'dialogueTextId': dialogueWord.id
+                            }) }}">
+                                <button class="btn btn-danger">Remove all dialogues</button>
+                            </a>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5">
+            <div class="col-12">
+                <form method="post">
+                    <div class="card"></div>
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-group">
+                                <li class="list-group-item">
+                                    <div class="d-flex justify-content-end">
+                                        <input type="submit" class="btn btn-link" value="Save explanations">
+                                    </div>
+
+                                </li>
+                                {% for text in dialogueWord.dialogueTextWords %}
+                                    <li class="list-group-item">
+                                        <p dir="rtl" class="text-end display-5">
+                                            {{ text.text }}
+                                        </p>
+                                        <div class="accordion" id="accordionExample">
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="headingFirstOne{{ text.id }}">
+                                                    <button class="accordion-button" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapseFirstOne{{ text.id }}"
+                                                            aria-expanded="falese"
+                                                            aria-controls="collapseFirstOne{{ text.id }}">
+                                                        Explanation
+                                                    </button>
+                                                </h2>
+                                                <div id="collapseFirstOne{{ text.id }}"
+                                                     class="accordion-collapse collapse"
+                                                     aria-labelledby="headingFirstOne{{ text.id }}"
+                                                     data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        {{ text.explanation ? text.explanation|raw : 'There is no explanation yet' }}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="accordion-item">
+                                                <h2 class="accordion-header" id="heading{{ text.id }}">
+                                                    <button class="accordion-button collapsed" type="button"
+                                                            data-bs-toggle="collapse"
+                                                            data-bs-target="#collapse{{ text.id }}"
+                                                            aria-expanded="false" aria-controls="collapse{{ text.id }}">
+                                                        Edit explanation
+                                                    </button>
+                                                </h2>
+                                                <div id="collapse{{ text.id }}" class="accordion-collapse collapse"
+                                                     aria-labelledby="heading{{ text.id }}"
+                                                     data-bs-parent="#accordionExample">
+                                                    <div class="accordion-body">
+                                                        <label for="text-field-{{ loop.index }}"></label>
+                                                        <textarea class="ckeditor-replace" name="explanation[{{ text.id }}]"
+                                                                  id="text-field-{{ loop.index }}">
+                                                            {{ text.explanation }}
+                                                         </textarea>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>
+                                {% else %}
+                                    <li class="list-group-item d-flex align-items-center">
+                                        <p class="m-2">
+                                            There is no individual explanations (yet)
+                                        </p>
+                                    </li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <script src="{{ asset('build/ckeditor/ckeditor.js') }}"></script>
+    <script>
+        var textFields = document.querySelectorAll('.ckeditor-replace');
+
+        for (var i = 0; i < textFields.length; i++) {
+            CKEDITOR.replace(textFields[i].id, {
+                on: {
+                    instanceReady: function() {
+                        this.ui.addButton('MySpan', {
+                            label: 'Wrap selected text in <span>',
+                            command: 'wrapSpan',
+                            toolbar: 'custom'
+                        });
+                    }
+                },
+                // Add a command to wrap the selected text in a <span>
+                commands: {
+                    wrapSpan: {
+                        exec: function(editor) {
+                            var selection = editor.getSelection();
+                            var selectedText = selection.getSelectedText();
+                            var newText = '<span>' + selectedText + '</span>';
+                            editor.insertHtml(newText);
+                        }
+                    }
+                }
+            });
+        }
+
+        const selectorButton = document.getElementById('selector-button');
+        const selector = document.getElementById('selector');
+        const wordArray = [];
+
+        var form = document.querySelector('form');
+
+        // Add a submit event listener to the form
+        form.addEventListener('submit', function (event) {
+            // Prevent the form from being submitted
+            event.preventDefault();
+
+            var input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'words';
+            input.value = JSON.stringify(wordArray);
+
+            form.appendChild(input);
+
+            form.submit();
+        });
+
+        selectorButton.addEventListener('click', () => {
+            // Get the selected text
+            const selection = window.getSelection();
+
+            // Check if there is any selected text
+            if (selection.toString()) {
+                // Create a span element
+                const span = document.createElement('span');
+
+                // Give the span a random color as the background
+                span.style.backgroundColor = getRandomColor();
+
+                const selectedElement = selection.anchorNode.parentElement.closest('p');
+
+                let innerHTML = selectedElement.getAttribute('data-dialogue-value');
+
+                let startPos = innerHTML.indexOf(selection.toString());
+                const endPos = startPos + selection.toString().length;
+
+                if (startPos === -1) {
+                    startPos = 0
+                }
+
+                selection.getRangeAt(0).surroundContents(span);
+                wordArray.push({
+                    "value": selection.toString(),
+                    "start": startPos,
+                    "end": endPos
+                });
+                clearSelection();
+
+            }
+        });
+
+        function getRandomColor() {
+            const letters = '0123456789ABCDEF';
+            let color = '#';
+            for (let i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function clearSelection() {
+            if (window.getSelection) {
+                window.getSelection().removeAllRanges();
+            } else if (document.selection) {
+                document.selection.empty();
+            }
+        }
+
+    </script>
+
+{% endblock %}
